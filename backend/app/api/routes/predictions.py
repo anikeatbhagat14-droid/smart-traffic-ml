@@ -1,64 +1,74 @@
 from fastapi import APIRouter
 from pydantic import BaseModel
 from datetime import datetime
-from app.services.model_service import predict_traffic_ml
+import random
 
 router = APIRouter()
 
 # Temporary in-memory history
 prediction_history = []
 
-
 class PredictionRequest(BaseModel):
     area_name: str
     prediction_datetime: datetime
     weather_main: str
     temperature: float
-    is_holiday: bool
-    rain_1h: float
-    snow_1h: float
-    clouds_all: int
-
+    is_holiday: bool = False
+    rain_1h: float = 0.0
+    snow_1h: float = 0.0
+    clouds_all: int = 0
 
 @router.post("/predict")
 def predict_traffic(data: PredictionRequest):
-    input_data = data.dict()
+    # Dummy traffic prediction logic
+    base = 2000
 
-    predicted_traffic = predict_traffic_ml(input_data)
+    if data.weather_main.lower() in ["rain", "drizzle", "thunderstorm"]:
+        base += 500
+    if data.weather_main.lower() in ["snow"]:
+        base += 700
+    if data.temperature > 35:
+        base += 200
+    if data.is_holiday:
+        base -= 300
+    if data.clouds_all > 70:
+        base += 150
 
-    if predicted_traffic < 1000:
-        congestion = "Low"
-        alert = "Traffic is smooth."
-        recommendation = "You can travel anytime."
-    elif predicted_traffic < 1800:
-        congestion = "Moderate"
-        alert = "Moderate traffic expected."
-        recommendation = "Travel slightly earlier if possible."
-    elif predicted_traffic < 2400:
-        congestion = "High"
-        alert = "Heavy traffic expected."
-        recommendation = "Avoid peak rush hour if possible."
+    predicted_traffic_volume = base + random.randint(-300, 300)
+
+    if predicted_traffic_volume < 2200:
+        congestion_level = "Low"
+        alert_message = "Traffic is smooth."
+        recommended_travel_time = "Best time to travel now."
+    elif predicted_traffic_volume < 2700:
+        congestion_level = "Moderate"
+        alert_message = "Moderate congestion expected."
+        recommended_travel_time = "Travel with slight delay."
     else:
-        congestion = "Severe"
-        alert = "Severe congestion likely."
-        recommendation = "Travel before or after peak time."
+        congestion_level = "High"
+        alert_message = "Heavy congestion expected!"
+        recommended_travel_time = "Avoid peak time if possible."
 
-    response = {
-        "id": len(prediction_history) + 1,
+    result = {
         "area_name": data.area_name,
-        "prediction_datetime": data.prediction_datetime,
+        "prediction_datetime": data.prediction_datetime.isoformat(),
         "weather_main": data.weather_main,
         "temperature": data.temperature,
-        "predicted_traffic_volume": predicted_traffic,
-        "congestion_level": congestion,
-        "alert_message": alert,
-        "recommended_travel_time": recommendation,
+        "predicted_traffic_volume": predicted_traffic_volume,
+        "congestion_level": congestion_level,
+        "alert_message": alert_message,
+        "recommended_travel_time": recommended_travel_time,
     }
 
-    prediction_history.append(response)
-    return response
+    prediction_history.append(result)
 
+    return {
+        "predicted_traffic_volume": predicted_traffic_volume,
+        "congestion_level": congestion_level,
+        "alert_message": alert_message,
+        "recommended_travel_time": recommended_travel_time,
+    }
 
 @router.get("/history")
-def get_history():
+def get_prediction_history():
     return prediction_history
