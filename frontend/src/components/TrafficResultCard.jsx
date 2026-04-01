@@ -6,35 +6,39 @@ export default function TrafficResultCard({ result }) {
       ? "text-green-400"
       : result.congestion_level === "Moderate"
       ? "text-yellow-400"
-      : result.congestion_level === "High"
-      ? "text-orange-400"
       : "text-red-400";
 
   return (
-    <div className="bg-slate-800 rounded-2xl p-6 shadow-xl border border-slate-700 mt-6">
-      <h2 className="text-2xl font-bold mb-4">Prediction Result</h2>
+    <div className="mt-10 bg-white/5 backdrop-blur-lg border border-white/10 rounded-3xl p-8 shadow-2xl max-w-3xl mx-auto">
+      <h2 className="text-3xl font-bold mb-6 text-center text-white">
+        Prediction Result
+      </h2>
 
-      <div className="grid md:grid-cols-2 gap-4">
-        <div className="bg-slate-900 p-4 rounded-xl">
-          <p className="text-slate-400">Predicted Traffic Volume</p>
-          <p className="text-3xl font-bold">{result.predicted_traffic_volume}</p>
+      <div className="grid md:grid-cols-2 gap-6">
+        <div className="bg-slate-900/70 rounded-2xl p-5">
+          <p className="text-slate-400 text-sm mb-1">Predicted Traffic Volume</p>
+          <p className="text-4xl font-bold text-blue-400">
+            {Number(result.predicted_traffic_volume).toFixed(2)}
+          </p>
         </div>
 
-        <div className="bg-slate-900 p-4 rounded-xl">
-          <p className="text-slate-400">Congestion Level</p>
-          <p className={`text-3xl font-bold ${congestionColor}`}>
+        <div className="bg-slate-900/70 rounded-2xl p-5">
+          <p className="text-slate-400 text-sm mb-1">Congestion Level</p>
+          <p className={`text-4xl font-bold ${congestionColor}`}>
             {result.congestion_level}
           </p>
         </div>
 
-        <div className="bg-slate-900 p-4 rounded-xl md:col-span-2">
-          <p className="text-slate-400">Traffic Alert</p>
-          <p className="text-lg font-medium">{result.alert_message}</p>
+        <div className="bg-slate-900/70 rounded-2xl p-5 md:col-span-2">
+          <p className="text-slate-400 text-sm mb-1">Alert Message</p>
+          <p className="text-lg font-medium text-white">{result.alert_message}</p>
         </div>
 
-        <div className="bg-slate-900 p-4 rounded-xl md:col-span-2">
-          <p className="text-slate-400">Best Travel Time Recommendation</p>
-          <p className="text-lg font-medium">{result.recommended_travel_time}</p>
+        <div className="bg-slate-900/70 rounded-2xl p-5 md:col-span-2">
+          <p className="text-slate-400 text-sm mb-1">Recommended Travel Time</p>
+          <p className="text-lg font-medium text-white">
+            {result.recommended_travel_time}
+          </p>
         </div>
       </div>
     </div>

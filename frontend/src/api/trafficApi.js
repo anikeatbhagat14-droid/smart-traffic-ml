@@ -1,12 +1,10 @@
 import axios from "axios";
 
 const API = axios.create({
-  baseURL: "http://127.0.0.1:8000",
+  baseURL: "https://smart-traffic-backend-ldss.onrender.com",
 });
 
-export const getHealth = () => API.get("/health");
-export const predictTraffic = (payload) => API.post("/predictions/predict", payload);
-export const getHistory = () => API.get("/predictions/history");
-export const getAnalyticsSummary = () => API.get("/analytics/summary");
-export const getPeakHours = () => API.get("/analytics/peak-hours");
+export const predictTraffic = (data) => API.post("/predictions/predict", data);
 export const getLocations = () => API.get("/locations/");
+export const getAnalyticsSummary = () => API.get("/analytics/summary");
+export const getPredictionHistory = () => API.get("/predictions/history");
