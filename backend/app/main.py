@@ -1,30 +1,23 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from app.api.api import api_router
-from app.db.database import Base, engine
+from app.api.routes.predictions import router as predictions_router
+from app.api.routes.locations import router as locations_router
 
-# Create DB tables
-Base.metadata.create_all(bind=engine)
+app = FastAPI()
 
-app = FastAPI(
-    title="Smart Traffic Flow Prediction API",
-    version="1.0.0"
-)
-
-# CORS for frontend connection
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # for development
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
-# Root route
 @app.get("/")
 def root():
     return {"message": "Smart Traffic Flow Prediction API is running"}
 
-# Include all routes
-app.include_router(api_router)
+# ✅ attach routes
+app.include_router(predictions_router, prefix="/predictions", tags=["Predictions"])
+app.include_router(locations_router, prefix="/locations", tags=["Locations"])
