@@ -8,4 +8,4 @@ export const predictTraffic = (data) => API.post("/predictions/predict", data);
 export const getLocations = () => API.get("/locations");
 export const getAnalyticsSummary = () => API.get("/analytics/summary");
 export const getPeakHours = () => API.get("/analytics/peak-hours");
-export const getHistory = () => API.get("/predictions/history");
+export const getPredictionHistory = () => API.get("/predictions/history");

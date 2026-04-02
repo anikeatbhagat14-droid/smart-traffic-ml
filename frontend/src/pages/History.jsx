@@ -7,7 +7,7 @@ export default function History() {
   useEffect(() => {
     getPredictionHistory()
       .then((res) => setHistory(res.data))
-      .catch((err) => console.error("History fetch error:", err));
+      .catch((err) => console.error("History fetch failed:", err));
   }, []);
 
   return (
@@ -15,7 +15,7 @@ export default function History() {
       <div className="max-w-7xl mx-auto">
         {/* Heading */}
         <div className="text-center mb-12">
-          <h1 className="text-5xl font-extrabold mb-4">🕘 Prediction History</h1>
+          <h1 className="text-5xl font-extrabold mb-4">📜 Prediction History</h1>
           <p className="text-slate-300 text-lg max-w-2xl mx-auto">
             View past traffic predictions, congestion levels, and insights.
           </p>
@@ -29,7 +29,7 @@ export default function History() {
                 <th className="p-4 text-slate-300">Area</th>
                 <th className="p-4 text-slate-300">Date & Time</th>
                 <th className="p-4 text-slate-300">Weather</th>
-                <th className="p-4 text-slate-300">Temp(°C)</th>
+                <th className="p-4 text-slate-300">Temp (°C)</th>
                 <th className="p-4 text-slate-300">Traffic</th>
                 <th className="p-4 text-slate-300">Congestion</th>
               </tr>
@@ -39,7 +39,7 @@ export default function History() {
               {history.length > 0 ? (
                 history.map((item, index) => (
                   <tr
-                    key={index}
+                    key={item.id || index}
                     className="border-b border-white/10 hover:bg-white/5 transition"
                   >
                     <td className="p-4">{item.area_name}</td>
@@ -57,6 +57,8 @@ export default function History() {
                           ? "text-green-400"
                           : item.congestion_level === "Moderate"
                           ? "text-yellow-400"
+                          : item.congestion_level === "High"
+                          ? "text-orange-400"
                           : "text-red-400"
                       }`}
                     >
